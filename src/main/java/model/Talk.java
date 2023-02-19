@@ -5,8 +5,7 @@ import lombok.Data;
 import java.time.LocalTime;
 
 @Data
-public class Plan {
-
+public class Talk {
   private String message;
   private LocalTime time;
   private boolean isInvoke;

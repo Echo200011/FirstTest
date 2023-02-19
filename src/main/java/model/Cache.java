@@ -7,10 +7,10 @@ import java.util.List;
 @Data
 public class Cache {
 
-  private List<Plan> Already;
-  private List<Plan> unfinished;
+  private List<Talk> Already;
+  private List<Talk> unfinished;
 
-  public Cache(List<Plan> plans) {
+  public Cache(List<Talk> plans) {
     this.unfinished = plans;
   }
 }

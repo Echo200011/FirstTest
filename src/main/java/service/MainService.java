@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class MainService {
 
 
-  public Cache processingPlan(List<Plan> plans, Time time, Cache cache) {
+  public Cache processingPlan(List<Talk> plans, Time time, Cache cache) {
     cache.setAlready(null);
     cache.getUnfinished()
         .stream()
@@ -18,7 +18,7 @@ public class MainService {
             > plan.getTimes())
         .forEach(plan -> ProcessTimeUtil.processTime(plan, time));
     cache.setAlready(
-        cache.getUnfinished().stream().filter(Plan::isInvoke).collect(Collectors.toList()));
+        cache.getUnfinished().stream().filter(Talk::isInvoke).collect(Collectors.toList()));
     cache.setUnfinished(
         plans.stream().filter(plan -> !plan.isInvoke()).collect(Collectors.toList()));
     return cache;
