@@ -17,8 +17,4 @@ class MainTest {
       track.getAfternoonSession().getTalkList().forEach(talk -> System.out.println(talk.getMessage()));
     });
   }
-
-  @Test
-  void of() {
-  }
 }

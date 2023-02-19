@@ -24,8 +24,8 @@ public class MainService {
     return cache;
   }
 
-  public Session processingSession(Cache cache, String timeFrame) {
-    return new Session(cache.getAlready(), timeFrame);
+  public Session processingSession(Cache cache) {
+    return new Session(cache.getAlready());
   }
 
   public Track processingTrack(Session morningSession, Session afternoonSession) {

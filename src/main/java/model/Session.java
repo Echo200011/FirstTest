@@ -7,10 +7,7 @@ import java.util.List;
 public class Session {
     private List<Talk> talkList;
 
-    private String timeFrame;
-
-    public Session(List<Talk> talkList,String timeFrame){
+    public Session(List<Talk> talkList){
         this.talkList=talkList;
-        this.timeFrame=timeFrame;
     }
 }

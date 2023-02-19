@@ -22,9 +22,9 @@ public class Main {
       Cache cache = new Cache(talkList);
       Collections.shuffle(talkList, new Random());
       Session morningSession = mainService.processingSession(
-          mainService.processingPlan(talkList, of(9, 12), cache), "morning");
+          mainService.processingPlan(talkList, of(9, 12), cache));
       Session afternoonSession = mainService.processingSession(
-          mainService.processingPlan(talkList, of(13, 17), cache), "afternoon");
+          mainService.processingPlan(talkList, of(13, 17), cache));
       Track track = mainService.processingTrack(morningSession, afternoonSession);
       track.setId(i);
       tracks.add(track);
