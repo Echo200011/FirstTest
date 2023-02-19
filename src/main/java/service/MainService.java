@@ -8,21 +8,19 @@ import java.util.stream.Collectors;
 
 public class MainService {
 
-
-  public Cache processingPlan(List<Talk> plans, Time time, Cache cache) {
-    cache.setAlready(null);
+  public Cache processingPlan(List<Talk> talks, Time time, Cache cache) {
     cache.getUnfinished().forEach(p -> {
-          if (Duration.between(time.getStartTime(), time.getEndTime()).toMinutes() > p.getTimes()) {
-            time.setStartTime(time.getStartTime().plusMinutes(p.getTime().getMinute())
-                .plusHours(p.getTime().getHour()));
-            p.setInvoke(true);
-          }
-        });
-
+      if (Duration.between(time.getStartTime(), time.getEndTime()).toMinutes() > p.getTimes()) {
+        p.setMessage(time.getStartTime() + " " + p.getMessage());
+        time.setStartTime(time.getStartTime().plusMinutes(p.getTime().getMinute())
+            .plusHours(p.getTime().getHour()));
+        p.setInvoke(true);
+      }
+    });
     cache.setAlready(
         cache.getUnfinished().stream().filter(Talk::isInvoke).collect(Collectors.toList()));
     cache.setUnfinished(
-        plans.stream().filter(plan -> !plan.isInvoke()).collect(Collectors.toList()));
+        talks.stream().filter(plan -> !plan.isInvoke()).collect(Collectors.toList()));
     return cache;
   }
 

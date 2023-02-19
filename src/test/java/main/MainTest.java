@@ -1,21 +1,21 @@
 package main;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
-import model.Talk;
+import model.Track;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
 
   @Test
-  void main() {
-    List<Talk> plans =new ArrayList<>();
-    for (int i = 0; i < 20; i++) {
-      Talk plan =new Talk("dsasd"+i,(int)(Math.random()*59+1));
-      plans.add(plan);
-    }
-    Main main =new Main();
-    main.main(plans);
+  void main() throws IOException {
+    Main main = new Main();
+    List<Track> tracks = main.main("D:\\IoTestFile\\Test.txt",2);
+    tracks.forEach(track -> {
+      System.out.println(track.getId());
+      track.getMorningSession().getTalkList().forEach(talk -> System.out.println(talk.getMessage()));
+      track.getAfternoonSession().getTalkList().forEach(talk -> System.out.println(talk.getMessage()));
+    });
   }
 
   @Test
