@@ -10,10 +10,8 @@ class MainTest {
   @Test
   void main() {
     List<Talk> plans =new ArrayList<>();
-    plans.stream().forEach(plan -> plan.setMessage("sdasdsadasdsad"));
     for (int i = 0; i < 20; i++) {
-      Talk plan =new Talk();
-      plan.setTimes((int)(Math.random()*59+1));
+      Talk plan =new Talk("dsasd"+i,(int)(Math.random()*59+1));
       plans.add(plan);
     }
     Main main =new Main();

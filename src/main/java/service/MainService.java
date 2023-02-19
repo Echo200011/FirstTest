@@ -1,7 +1,6 @@
 package service;
 
 import model.*;
-import util.ProcessTimeUtil;
 
 import java.time.Duration;
 import java.util.List;
@@ -12,11 +11,14 @@ public class MainService {
 
   public Cache processingPlan(List<Talk> plans, Time time, Cache cache) {
     cache.setAlready(null);
-    cache.getUnfinished()
-        .stream()
-        .filter(plan -> Duration.between(time.getStartTime(), time.getEndTime()).toMinutes()
-            > plan.getTimes())
-        .forEach(plan -> ProcessTimeUtil.processTime(plan, time));
+    cache.getUnfinished().forEach(p -> {
+          if (Duration.between(time.getStartTime(), time.getEndTime()).toMinutes() > p.getTimes()) {
+            time.setStartTime(time.getStartTime().plusMinutes(p.getTime().getMinute())
+                .plusHours(p.getTime().getHour()));
+            p.setInvoke(true);
+          }
+        });
+
     cache.setAlready(
         cache.getUnfinished().stream().filter(Talk::isInvoke).collect(Collectors.toList()));
     cache.setUnfinished(
