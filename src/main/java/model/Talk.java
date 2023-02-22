@@ -14,14 +14,8 @@ public class Talk {
   private int times;
 
   public Talk(String message, int times) {
-    Duration duration;
     this.message = message;
     this.times = times;
-    if (times % 5 == 0) {
-      duration = Duration.ofMinutes(times);
-    } else {
-      duration = Duration.ofMinutes((times - times % 5 + 5));
-    }
-    this.time = LocalTime.MIDNIGHT.plus(duration);
+    this.time = LocalTime.MIDNIGHT.plus((times % 5 == 0) ? Duration.ofMinutes(times) : Duration.ofMinutes((times - times % 5 + 5)));
   }
 }
