@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="service.ReceiveMessageServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-02-21T01:45:26" hostname="杨泽宇的电脑" time="0.001">
+<testsuite name="service.ReceiveMessageServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-02-23T12:28:27" hostname="杨泽宇的电脑" time="0.001">
   <properties/>
   <testcase name="receivedMessageToTalkTest()" classname="service.ReceiveMessageServiceTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>

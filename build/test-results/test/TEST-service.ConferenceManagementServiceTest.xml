@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="service.ConferenceManagementServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-02-21T01:45:26" hostname="杨泽宇的电脑" time="0.027">
+<testsuite name="service.ConferenceManagementServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-02-23T12:28:27" hostname="杨泽宇的电脑" time="0.027">
   <properties/>
-  <testcase name="TheTypeAfterProcessingTalkTest()" classname="service.ConferenceManagementServiceTest" time="0.022"/>
-  <testcase name="processTrack()" classname="service.ConferenceManagementServiceTest" time="0.003"/>
-  <testcase name="TheTypeAfterProcessingSessionTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldReturnTalkListIfInputNormalPath()" classname="service.ConferenceManagementServiceTest" time="0.02"/>
+  <testcase name="shouldReturnNullIfInputErrorpathTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldRetrunNullIfInputErrorParameter()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldReturnCacheIfNormalInputCauseTest()" classname="service.ConferenceManagementServiceTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

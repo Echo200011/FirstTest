@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class Session {
+    private boolean isMorning;
     private List<Talk> talkList;
 
 }

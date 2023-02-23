@@ -1,10 +1,12 @@
 package service;
 
 
+import com.sun.xml.internal.ws.policy.AssertionSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.SneakyThrows;
 import model.Cache;
 import model.Session;
 import model.Talk;
@@ -20,7 +22,8 @@ class ConferenceManagementServiceTest {
   ConferenceManagementService conferenceManagementService = new ConferenceManagementService();
 
   @Test
-  void shouldReturnTalkListIfInputNormalPath() throws IOException {
+  @SneakyThrows
+  void shouldReturnTalkListIfInputNormalPathTest() {
     ProcessFileService processFileService = new ProcessFileService();
     List<Talk> talks = processFileService.processData("D:\\IoTestFile\\Test.txt");
     File file = new File("D:\\IoTestFile\\Test.txt");
@@ -32,65 +35,140 @@ class ConferenceManagementServiceTest {
   }
 
   @Test
-  void shouldReturnNullIfInputErrorpathTest() throws IOException {
+  @SneakyThrows
+  void shouldReturnNullIfInputErrorpathTest() {
     ProcessFileService processFileService = new ProcessFileService();
-    Assertions.assertNull(processFileService.processData("D:\\IoTestFile\\1.txt"));
-    Assertions.assertNull(processFileService.processData("xzczxc"));
+    List<Talk> talkList = processFileService.processData("D:\\IoTestFile\\1.txt");
+    Assertions.assertNull(talkList);
+    talkList = processFileService.processData("xzczxc");
+    Assertions.assertNull(talkList);
+    talkList = processFileService.processData("D:\\IoTestFile\\Test2.txt");
+    Assertions.assertNotNull(talkList);
+    Assertions.assertEquals(18, talkList.size());
+    boolean isExist = talkList.stream().filter(talk -> talk.getMessage().equals("")).findAny().isPresent();
+    Assertions.assertFalse(isExist);
   }
 
   @Test
-  void shouldReturnCacheIfNormalInputCauseTest() throws IOException {
+  @SneakyThrows
+  void shouldReturnCacheIfNormalInputNormalTalkListTest() {
     ProcessFileService processFileService = new ProcessFileService();
-    List<Talk> talkList = processFileService.processData("D:\\IoTestFile\\Test.txt");
+    List<Talk> talkList = processFileService.processData("D:\\IoTestFile\\Test3.txt");
     Cache cache = new Cache(talkList);
     Assertions.assertNotNull(conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache));
+    boolean isExist = cache.getAlready().stream()
+        .filter(talk -> talk.getMessage().contains("Lua for the Masses 30min"))
+        .findAny()
+        .isPresent();
+    Assertions.assertTrue(isExist);
+    isExist = cache.getAlready().stream()
+        .filter(talk -> talk.getTimes() == 30)
+        .findAny()
+        .isPresent();
+    Assertions.assertTrue(isExist);
   }
 
   @Test
-  void shouldRetrunNullIfInputErrorParameter() throws IOException {
+  @SneakyThrows
+  void shouldRetrunNullIfInputErrorTalkListOrErrorTimeOrErrorCacheTest() {
     ProcessFileService processFileService = new ProcessFileService();
     List<Talk> talkList = processFileService.processData("dsadasd");
     Cache cache = new Cache(talkList);
     Cache cache1 = new Cache(new ArrayList<>());
-    Assertions.assertNull(conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache));
-    Assertions.assertNull(conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(1000000000, 12), cache));
-    Assertions.assertNull(conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache));
+    Cache cache2 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache);
+    Assertions.assertNull(cache2);
+    cache2 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache1);
+    Assertions.assertNull(cache2);
+    cache2 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(1000000, 12), cache);
+    Assertions.assertNull(cache2);
   }
 
 
-
-/*  @Test
-  void() {
-
-  }*/
-
- /*  @Test
- void TheTypeAfterProcessingSessionTest() {
+  @Test
+  @SneakyThrows
+  void shouldRetrunSessionIfInputNormalCacheTest() {
+    ProcessFileService processFileService = new ProcessFileService();
+    List<Talk> talkList = processFileService.processData("D:\\IoTestFile\\Test3.txt");
     Cache cache = new Cache(talkList);
-    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12),
-        cache);
-    Session morningSession=conferenceManagementService.processSession(cache);
-    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(13, 17),
-        cache);
-    Session afternoonSession=conferenceManagementService.processSession(cache);
-    morningSession.getTalkList().forEach(talk ->  Assertions.assertSame(talk.getClass(),Talk.class));
-    afternoonSession.getTalkList().forEach(talk ->  Assertions.assertSame(talk.getClass(),Talk.class));
+    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache);
+    Session session = conferenceManagementService.processSession(cache,ProcessTimeUtil.of(9, 12));
+    Assertions.assertNotNull(session.getTalkList());
+    boolean isExist = session.getTalkList().stream()
+        .filter(talk -> talk.getMessage().contains("Lua for the Masses 30min"))
+        .findAny()
+        .isPresent();
+    Assertions.assertTrue(isExist);
+    isExist = session.getTalkList().stream()
+        .filter(talk -> talk.getTimes() == 30)
+        .findAny()
+        .isPresent();
+    Assertions.assertTrue(isExist);
   }
 
   @Test
-  void processTrack() {
+  @SneakyThrows
+  void shouldRetrunNullIfInputErrorCacheTest() {
+    ProcessFileService processFileService = new ProcessFileService();
+    List<Talk> talkList = processFileService.processData("asdasdad");
     Cache cache = new Cache(talkList);
-    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12),
-        cache);
-    Session morningSession=conferenceManagementService.processSession(cache);
-    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(13, 17),
-        cache);
-    Session afternoonSession=conferenceManagementService.processSession(cache);
-    morningSession.getTalkList().forEach(talk ->  Assertions.assertSame(talk.getClass(),Talk.class));
-    afternoonSession.getTalkList().forEach(talk ->  Assertions.assertSame(talk.getClass(),Talk.class));
-    Track track = conferenceManagementService.processTrack(morningSession,afternoonSession);
-      track.getMorningSession().getTalkList().forEach(talk ->  Assertions.assertSame(talk.getClass(),Talk.class));
-      track.getAfternoonSession().getTalkList().forEach(talk ->Assertions.assertSame(talk.getClass(),Talk.class));
-      Assertions.assertEquals(track.getMorningSession().getTalkList().get(0).getMessage(),talkList.get(0).getMessage());
-  }*/
+    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache);
+    Session session = conferenceManagementService.processSession(cache, ProcessTimeUtil.of(9, 12));
+    Assertions.assertNull(session);
+    session = conferenceManagementService.processSession(null, ProcessTimeUtil.of(9, 12));
+    Assertions.assertNull(session);
+  }
+
+
+  @Test
+  void shouldRetrunTrackIfInputNormalSessionTest() {
+    ProcessFileService processFileService = new ProcessFileService();
+    List<Talk> talkList = processFileService.processData("D:\\IoTestFile\\Test.txt");
+    Cache cache = new Cache(talkList);
+    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache);
+    Session morningSession = conferenceManagementService.processSession(cache, ProcessTimeUtil.of(9, 12));
+    Cache cache1 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(13, 17), cache);
+    Session afterSession = conferenceManagementService.processSession(cache1,ProcessTimeUtil.of(13, 17));
+    Track track = conferenceManagementService.processTrack(morningSession, afterSession);
+    Assertions.assertNotNull(track.getMorningSession().getTalkList());
+    Assertions.assertNotNull(track.getAfternoonSession().getTalkList());
+  }
+
+  @Test
+  void shouldRetrunNullIfInputErrorSessionTest() {
+    Session morningSession = new Session(true,new ArrayList<>());
+    Session afterSession =  new Session(false,new ArrayList<>());
+    Track track = conferenceManagementService.processTrack(morningSession,afterSession);
+    Assertions.assertNull(track);
+  }
+
+  @Test
+  void shouldReverseIfInputReverseTest() {
+    ProcessFileService processFileService = new ProcessFileService();
+    List<Talk> talkList = processFileService.processData("D:\\IoTestFile\\Test.txt");
+    Cache cache = new Cache(talkList);
+    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache);
+    Session morningSession = conferenceManagementService.processSession(cache, ProcessTimeUtil.of(9, 12));
+    Cache cache1 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(13, 17), cache);
+    Session afterSession = conferenceManagementService.processSession(cache1,ProcessTimeUtil.of(13, 17));
+    Track track = conferenceManagementService.processTrack(morningSession,afterSession);
+    Track track1 =conferenceManagementService.processTrack(afterSession,morningSession);
+    Assertions.assertEquals(track.getMorningSession().getTalkList(),track1.getMorningSession().getTalkList());
+  }
+
+  @Test
+  void shouldReturnTrackButTalkListInTheAfternoonIsNullIfAfternoonsessionIsnulltTest() {
+    ProcessFileService processFileService = new ProcessFileService();
+    List<Talk> talkList = processFileService.processData("D:\\IoTestFile\\Test3.txt");
+    Cache cache = new Cache(talkList);
+    conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12), cache);
+    Session morningSession = conferenceManagementService.processSession(cache, ProcessTimeUtil.of(9, 12));
+    Cache cache1 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(13, 17), cache);
+    Session afterSession = conferenceManagementService.processSession(cache1,ProcessTimeUtil.of(13, 17));
+    Track track = conferenceManagementService.processTrack(morningSession,afterSession);
+    Assertions.assertNotNull(track);
+    Assertions.assertTrue(track.getMorningSession().getTalkList().size()>0);
+    Assertions.assertEquals(0,track.getAfternoonSession().getTalkList().size());
+  }
+
+
 }

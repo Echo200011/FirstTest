@@ -10,7 +10,7 @@ public class Cache {
   private List<Talk> already;
   private List<Talk> unfinished;
 
-  public Cache(List<Talk> talkList) {
-    this.unfinished = talkList;
-  }
+ public Cache(List<Talk> talkList){
+   this.unfinished=talkList;
+ }
 }
