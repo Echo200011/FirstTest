@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import lombok.Data;
 
 @Data
@@ -13,7 +12,7 @@ public class Track {
 
   public Track(Session morningSession, Session afternoonSession) {
     this.morningSession = morningSession;
-    this.afternoonSession = (afternoonSession==null)?new Session(false,new ArrayList<>()):afternoonSession;
+    this.afternoonSession = afternoonSession;
   }
 
 }

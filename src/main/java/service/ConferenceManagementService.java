@@ -1,7 +1,7 @@
 package service;
 
 import java.time.LocalTime;
-import jdk.nashorn.internal.runtime.ECMAException;
+import java.util.ArrayList;
 import model.*;
 
 import java.time.Duration;
@@ -10,58 +10,60 @@ import java.util.stream.Collectors;
 
 public class ConferenceManagementService {
 
-  public Cache processTalk(List<Talk> talks, Time time, Cache cache) {
-    try {
-      cache.getUnfinished().stream()
-          .filter(talk -> compareRemainingTime(time, talk))
-          .forEach(talk -> setMessage(talk, time));
-      return initCache(cache, talks);
-    } catch (NullPointerException exception) {
-      //打印日志
-      return null;
+
+  public List<Talk> processTalk(List<Talk> talkList, Time time) {
+    if (talkList == null || talkList.size() == 0 || time == null || time.getStartTime() == null || time.getEndTime() == null) {
+      return new ArrayList<>();
     }
+    Cache cache = new Cache(talkListalkListNotInvoke(talkList));
+    cache.getUnfinished().stream()
+        .filter(talk -> needTimeCompare(time, talk))
+        .forEach(talk -> setMessage(talk, time));
+    return initCache(cache, talkList).getAlready();
   }
 
-  public Session processSession(Cache cache, Time time) {
-    try {
-      return (cache.getUnfinished().size() == 0 && cache.getAlready().size()==0)
-          ? null : (time.getEndTime().getHour() == 12)
-          ? new Session(true, cache.getAlready()) : new Session(false, cache.getAlready());
-    } catch (NullPointerException exception) {
-      //日志打印
-      return null;
+  public Session processSession(List<Talk> talkList, Time time) {
+    if (talkList == null || talkList.size() == 0 || time == null || time.getStartTime() == null || time.getEndTime() == null) {
+      return new Session(false, new ArrayList<>());
     }
+    return (time.getEndTime().getHour() == 12) ? new Session(true, talkList) : new Session(false, talkList);
   }
 
   public Track processTrack(Session morningSession, Session afternoonSession) {
-    try {
-      return (morningSession.getTalkList().size() == 0)
-          ? null : (morningSession.isMorning())
-          ? new Track(morningSession, afternoonSession) : new Track(afternoonSession, morningSession);
-    } catch (NullPointerException exception) {
-      //打印日志
-      return null;
+    if (morningSession == null || afternoonSession == null) {
+      return new Track(new Session(false, new ArrayList<>()), new Session(false, new ArrayList<>()));
     }
+    return (afternoonSession.getTalkList().size() == 0)
+        ? new Track(morningSession, new Session(false, new ArrayList<>())) : (morningSession.isMorning())
+        ? new Track(morningSession, afternoonSession) : new Track(afternoonSession, morningSession);
   }
 
-  private boolean compareRemainingTime(Time time, Talk talk) {
+  private boolean needTimeCompare(Time time, Talk talk) {
     return Duration.between(time.getStartTime(), time.getEndTime()).toMinutes() > talk.getTimes();
   }
 
   private void setMessage(Talk talk, Time time) {
     talk.setMessage(time.getStartTime() + " " + talk.getMessage());
-    time.setStartTime(computeStartTime(talk.getTime(),time.getStartTime()));
+    time.setStartTime(computeStartTime(talk.getTime(), time.getStartTime()));
     talk.setInvoke(true);
   }
 
-  private Cache initCache(Cache cache, List<Talk> talks) {
-    cache.setAlready(cache.getUnfinished().stream().filter(Talk::isInvoke).collect(Collectors.toList()));
-    cache.setUnfinished(talks.stream().filter(talk -> !talk.isInvoke()).collect(Collectors.toList()));
+  private Cache initCache(Cache cache, List<Talk> talkList) {
+    cache.setAlready(talkListalkListisInvoke(cache));
+    cache.setUnfinished(talkListalkListNotInvoke(talkList));
     return cache;
   }
 
-  private LocalTime computeStartTime(LocalTime talkTime,LocalTime startTime){
-   return startTime.plusMinutes(talkTime.getMinute()).plusHours(talkTime.getHour());
+  private LocalTime computeStartTime(LocalTime talkTime, LocalTime startTime) {
+    return startTime.plusMinutes(talkTime.getMinute()).plusHours(talkTime.getHour());
+  }
+
+  private List<Talk> talkListalkListisInvoke(Cache cache) {
+    return cache.getUnfinished().stream().filter(Talk::isInvoke).collect(Collectors.toList());
+  }
+
+  private List<Talk> talkListalkListNotInvoke(List<Talk> talkList) {
+    return talkList.stream().filter(talk -> !talk.isInvoke()).collect(Collectors.toList());
   }
 
 }

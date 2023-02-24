@@ -10,19 +10,18 @@ import org.apache.commons.io.FileUtils;
 
 public class ProcessFileService {
 
-  public List<Talk> processData(String path) {
-    List<String> message = getMessage(path);
-    return (message == null) ? null : initTalkList(message);
+  public List<Talk> processData(File file) {
+    List<String> message = getMessage(file);
+    return initTalkList(message);
   }
 
 
-  private List<String> getMessage(String path) {
-    File file = new File(path);
+  private List<String> getMessage(File file) {
     try {
       return FileUtils.readLines(file, "UTF-8");
     } catch (Exception e) {
       //用日志插件
-      return null;
+      throw  new IllegalArgumentException("读取文件失败",e);
     }
   }
 
