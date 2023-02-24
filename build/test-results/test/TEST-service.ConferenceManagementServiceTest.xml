@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="service.ConferenceManagementServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-02-23T12:28:27" hostname="杨泽宇的电脑" time="0.027">
+<testsuite name="service.ConferenceManagementServiceTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2023-02-24T01:15:19" hostname="杨泽宇的电脑" time="0.032">
   <properties/>
-  <testcase name="shouldReturnTalkListIfInputNormalPath()" classname="service.ConferenceManagementServiceTest" time="0.02"/>
+  <testcase name="shouldReverseIfInputReverseTest()" classname="service.ConferenceManagementServiceTest" time="0.022"/>
+  <testcase name="shouldRetrunNullIfInputErrorCacheTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldReturnTrackButTalkListInTheAfternoonIsNullIfAfternoonsessionIsnulltTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
   <testcase name="shouldReturnNullIfInputErrorpathTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
-  <testcase name="shouldRetrunNullIfInputErrorParameter()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
-  <testcase name="shouldReturnCacheIfNormalInputCauseTest()" classname="service.ConferenceManagementServiceTest" time="0.003"/>
+  <testcase name="shouldReturnCacheIfNormalInputNormalTalkListTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldReturnTalkListIfInputNormalPathTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldRetrunNullIfInputErrorTalkListOrErrorTimeOrErrorCacheTest()" classname="service.ConferenceManagementServiceTest" time="0.0"/>
+  <testcase name="shouldRetrunTrackIfInputNormalSessionTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldRetrunNullIfInputErrorSessionTest()" classname="service.ConferenceManagementServiceTest" time="0.0"/>
+  <testcase name="shouldRetrunSessionIfInputNormalCacheTest()" classname="service.ConferenceManagementServiceTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
