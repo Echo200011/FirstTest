@@ -22,8 +22,7 @@ class ProcessFileServiceTest {
     File file = processFile("Test3.txt");
     List<Talk> talkList = processFileService.processData(file);
     Assertions.assertEquals(3, talkList.size());
-    boolean isExist = talkList.stream()
-        .anyMatch(talk -> talk.getMessage().contains("Writing Fast Tests Against Enterprise Rails 60min"));
+    boolean isExist = talkList.stream().anyMatch(talk -> talk.getMessage().contains("Writing Fast Tests Against Enterprise Rails 60min"));
     Assertions.assertTrue(isExist);
     File file1 = new File("D:\\IoTestFile\\Test3.txt");
     List<String> testFile = FileUtils.readLines(file1, "UTF-8");
@@ -48,8 +47,8 @@ class ProcessFileServiceTest {
     try {
       Path path = Paths.get(url.toURI());
       return new File(path.toUri());
-    }catch (Exception exception){
-      throw  new IllegalArgumentException("路径错误");
+    } catch (Exception exception) {
+      throw new IllegalArgumentException("路径错误");
     }
   }
 

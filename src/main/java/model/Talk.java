@@ -2,7 +2,6 @@ package model;
 
 import java.time.Duration;
 import lombok.Data;
-
 import java.time.LocalTime;
 
 @Data

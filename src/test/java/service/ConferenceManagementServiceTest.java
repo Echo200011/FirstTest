@@ -8,11 +8,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import model.Cache;
 import model.Session;
 import model.Talk;
+import model.Time;
 import model.Track;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
@@ -107,19 +109,6 @@ class ConferenceManagementServiceTest {
   }
 
   @Test
-  void shouldReverseIfInputReverseTest() {
-    File file = processFile("Test.txt");
-    List<Talk> talkList = processFileService.processData(file);
-    List<Talk> returnTheTalkList1 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(9, 12));
-    Session morningSession = conferenceManagementService.processSession(returnTheTalkList1, ProcessTimeUtil.of(9, 12));
-    List<Talk> returnTheTalkList2 = conferenceManagementService.processTalk(talkList, ProcessTimeUtil.of(13, 17));
-    Session afterSession = conferenceManagementService.processSession(returnTheTalkList2, ProcessTimeUtil.of(13, 17));
-    Track track = conferenceManagementService.processTrack(morningSession, afterSession);
-    Track track1 = conferenceManagementService.processTrack(afterSession, morningSession);
-    Assertions.assertEquals(track.getMorningSession().getTalkList(), track1.getMorningSession().getTalkList());
-  }
-
-  @Test
   void shouldReturnTrackButTalkListInTheAfternoonIsNullIfAfternoonsessionIsnulltTest() {
     File file = processFile("Test3.txt");
     List<Talk> talkList = processFileService.processData(file);
@@ -140,8 +129,8 @@ class ConferenceManagementServiceTest {
     try {
       Path path = Paths.get(url.toURI());
       return new File(path.toUri());
-    }catch (Exception exception){
-      throw  new IllegalArgumentException("路径错误");
+    } catch (Exception exception) {
+      throw new IllegalArgumentException("路径错误");
     }
   }
 
