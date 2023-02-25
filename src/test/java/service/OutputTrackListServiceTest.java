@@ -21,8 +21,22 @@ class OutputTrackListServiceTest {
   private final OutputTrackListService outputTrackListService = new OutputTrackListService();
 
   @Test
-  void shouldReturnTrackIfInputNormalFile() throws IOException {
-    File file = processFile();
+  void shouldReturnTrackIfInputNormalFileTest() throws IOException {
+    File file = processFile("Test.txt");
+    Track track = outputTrackListService.outputTrackList(file);
+    assertNotNull(track);
+    List<String> templateMessage = FileUtils.readLines(file, "UTF-8");
+    List<String> message = track.getMorningSession().getTalkList().stream()
+        .map(Talk::getMessage).collect(Collectors.toList());
+    List<String> message2 = track.getAfternoonSession().getTalkList().stream()
+        .map(Talk::getMessage).collect(Collectors.toList());
+    message = (List<String>) CollectionUtils.union(message, message2);
+    boolean isExist = message.stream().anyMatch(m -> templateMessage.stream().anyMatch(m::contains));
+    Assertions.assertTrue(isExist);
+  }
+  @Test
+  void shouldReturnTrackIfBlankSpaceInTheFileTest() throws IOException {
+    File file = processFile("Test2.txt");
     Track track = outputTrackListService.outputTrackList(file);
     assertNotNull(track);
     List<String> templateMessage = FileUtils.readLines(file, "UTF-8");
@@ -36,8 +50,8 @@ class OutputTrackListServiceTest {
   }
 
 
-  private File processFile() {
-    URL url = getClass().getClassLoader().getResource("Test.txt");
+  private File processFile(String pathName) {
+    URL url = getClass().getClassLoader().getResource(pathName);
     assert url != null;
     try {
       Path path = Paths.get(url.toURI());
