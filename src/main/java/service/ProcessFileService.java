@@ -2,8 +2,6 @@ package service;
 
 import java.io.File;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import model.Talk;
 import org.apache.commons.io.FileUtils;
@@ -11,8 +9,7 @@ import org.apache.commons.io.FileUtils;
 public class ProcessFileService {
 
   public List<Talk> processData(File file) {
-    List<String> message = getMessage(file);
-    return initTalkList(message);
+    return initTalkList(getMessage(file));
   }
 
   private List<String> getMessage(File file) {
@@ -26,14 +23,8 @@ public class ProcessFileService {
   private List<Talk> initTalkList(List<String> message) {
     return message.stream()
         .filter(m -> !m.equals(""))
-        .map(m -> initTalk(m, Pattern.compile("[^0-9]")))
+        .map(Talk::initTalk)
         .collect(Collectors.toList());
-  }
-
-  private Talk initTalk(String message, Pattern pattern) {
-    String[] tokens = message.split(" ");
-    Matcher matcher = pattern.matcher(tokens[tokens.length - 1]);
-    return new Talk(message, Integer.parseInt(matcher.replaceAll("").trim()));
   }
 
 }

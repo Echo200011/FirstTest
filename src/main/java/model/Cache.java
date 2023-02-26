@@ -25,10 +25,14 @@ public class Cache {
   }
 
   private List<Talk> talkListIsInvoke(Cache cache) {
-    return cache.getUnfinished().stream().filter(Talk::isInvoke).collect(Collectors.toList());
+    return cache.getUnfinished().stream()
+        .filter(Talk::isInvoke)
+        .collect(Collectors.toList());
   }
 
   private List<Talk> talkListNotInvoke(List<Talk> talkList) {
-    return talkList.stream().filter(talk -> !talk.isInvoke()).collect(Collectors.toList());
+    return talkList.stream()
+        .filter(talk -> !talk.isInvoke())
+        .collect(Collectors.toList());
   }
 }

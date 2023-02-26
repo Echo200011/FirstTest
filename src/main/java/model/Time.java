@@ -16,5 +16,9 @@ public class Time {
     return (startTime > endTIme || startTime > 60 || endTIme > 60 || startTime == endTIme)
         ? null : new Time(LocalTime.of(startTime, 0), LocalTime.of(endTIme, 0));
   }
+
+  public LocalTime computeStartTime(LocalTime talkTime) {
+    return this.startTime = startTime.plusMinutes(talkTime.getMinute()).plusHours(talkTime.getHour());
+  }
 }
 

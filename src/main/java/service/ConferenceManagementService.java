@@ -44,13 +44,8 @@ public class ConferenceManagementService {
 
   private void setMessage(Talk talk, Time time) {
     talk.setMessage(time.getStartTime() + " " + talk.getMessage());
-    time.setStartTime(computeStartTime(talk.getTime(), time.getStartTime()));
+    time.setStartTime(time.computeStartTime(talk.getTime()));
     talk.setInvoke(true);
-  }
-
-
-  private LocalTime computeStartTime(LocalTime talkTime, LocalTime startTime) {
-    return startTime.plusMinutes(talkTime.getMinute()).plusHours(talkTime.getHour());
   }
 
 }
