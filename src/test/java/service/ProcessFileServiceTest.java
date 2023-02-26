@@ -36,7 +36,7 @@ class ProcessFileServiceTest {
   void shouldReturnTalkListIfABlankInFileTest() {
     File file = processFile("Test2.txt");
     List<Talk> talkList = processFileService.processData(file);
-    Assertions.assertEquals(18, talkList.size());
+    Assertions.assertEquals(19, talkList.size());
     boolean isExist = talkList.stream().anyMatch(talk -> talk.getMessage().equals(""));
     Assertions.assertFalse(isExist);
   }

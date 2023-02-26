@@ -12,7 +12,6 @@ import org.apache.commons.lang3.ObjectUtils;
 
 public class ConferenceManagementService {
 
-
   public List<Talk> processTalk(List<Talk> talkList, Time time) {
     if (CollectionUtils.isEmpty(talkList) || ObjectUtils.isEmpty(time)) {
       return new ArrayList<>();

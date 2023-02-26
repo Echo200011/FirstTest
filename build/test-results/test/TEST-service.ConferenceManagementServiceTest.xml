@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="service.ConferenceManagementServiceTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2023-02-26T06:19:16" hostname="杨泽宇的电脑" time="0.033">
+<testsuite name="service.ConferenceManagementServiceTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2023-02-26T07:07:38" hostname="杨泽宇的电脑" time="0.013">
   <properties/>
-  <testcase name="shouldRetrunNewTalkListIfInputErrorTalkListOrErrorTimeOrErrorCacheTest()" classname="service.ConferenceManagementServiceTest" time="0.022"/>
-  <testcase name="shouldReturnTrackButTalkListInTheAfternoonIsNullIfAfternoonsessionIsnulltTest()" classname="service.ConferenceManagementServiceTest" time="0.004"/>
+  <testcase name="shouldRetrunNewTalkListIfInputErrorTalkListOrErrorTimeOrErrorCacheTest()" classname="service.ConferenceManagementServiceTest" time="0.003"/>
+  <testcase name="shouldReturnTrackButTalkListInTheAfternoonIsNullIfAfternoonsessionIsnulltTest()" classname="service.ConferenceManagementServiceTest" time="0.003"/>
   <testcase name="shouldReturnCacheIfNormalInputNormalTalkListTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
   <testcase name="shouldRetrunNewSessionIfInputErrorCacheTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
-  <testcase name="shouldRetrunNewTrackIfInputErrorSessionTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
+  <testcase name="shouldRetrunNewTrackIfInputErrorSessionTest()" classname="service.ConferenceManagementServiceTest" time="0.0"/>
   <testcase name="shouldRetrunTrackIfInputNormalSessionTest()" classname="service.ConferenceManagementServiceTest" time="0.001"/>
   <testcase name="shouldRetrunNewTrackIfInputNullTest()" classname="service.ConferenceManagementServiceTest" time="0.0"/>
   <testcase name="shouldRetrunSessionIfInputNormalCacheTest()" classname="service.ConferenceManagementServiceTest" time="0.0"/>
