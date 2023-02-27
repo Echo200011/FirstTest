@@ -14,9 +14,4 @@ public class Track {
     this.afternoonSession = afternoonSession;
   }
 
-  public Track() {
-    this.morningSession = new Session();
-    this.afternoonSession = new Session();
-  }
-
 }

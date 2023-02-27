@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Collections;
+import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.Data;
 
@@ -14,6 +16,7 @@ public class Cache {
   private List<Talk> unfinished;
 
   public Cache(List<Talk> talkList) {
+    Collections.shuffle(talkList,new Random());
     this.unfinished = talkListNotInvoke(talkList);
     this.already = talkListIsInvoke(this);
   }

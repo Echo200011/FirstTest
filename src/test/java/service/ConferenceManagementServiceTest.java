@@ -2,15 +2,23 @@ package service;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import model.Session;
 import model.Talk;
 import model.Time;
 import model.Track;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -18,102 +26,64 @@ class ConferenceManagementServiceTest {
 
   private final ConferenceManagementService conferenceManagementService = new ConferenceManagementService();
 
-  private final ProcessFileService processFileService = new ProcessFileService();
-
-
   @Test
-  void shouldReturnCacheIfNormalInputNormalTalkListTest() {
-    File file = processFile("Test3.txt");
-    List<Talk> talkList = processFileService.processData(file);
-    List<Talk> returnTheTalkList = conferenceManagementService.processTalk(talkList, Time.of(9, 12));
-    Assertions.assertNotNull(conferenceManagementService.processTalk(talkList, Time.of(9, 12)));
-    boolean isExist = returnTheTalkList.stream().anyMatch(talk -> talk.getMessage().contains("Lua for the Masses 30min"));
-    Assertions.assertTrue(isExist);
-    isExist = returnTheTalkList.stream().anyMatch(talk -> talk.getTimes() == 30);
-    Assertions.assertTrue(isExist);
-  }
-
-
-  @Test
-  void shouldRetrunNewTalkListIfInputErrorTalkListOrErrorTimeOrErrorCacheTest() {
-    File file = processFile("Test3.txt");
-    List<Talk> talkList = processFileService.processData(file);
-    List<Talk> returnTheTalkList = conferenceManagementService.processTalk(new ArrayList<>(), Time.of(9, 12));
-    Assertions.assertEquals(0, returnTheTalkList.size());
-    returnTheTalkList = conferenceManagementService.processTalk(talkList, Time.of(1000000, 12));
-    Assertions.assertEquals(0, returnTheTalkList.size());
-    returnTheTalkList = conferenceManagementService.processTalk(talkList, null);
-    Assertions.assertEquals(0, returnTheTalkList.size());
-  }
-
-
-  @Test
-  void shouldRetrunSessionIfInputNormalCacheTest() {
-    File file = processFile("Test3.txt");
-    List<Talk> talkList = processFileService.processData(file);
-    List<Talk> returnTheTalkList = conferenceManagementService.processTalk(talkList, Time.of(9, 12));
-    Session session = conferenceManagementService.processSession(returnTheTalkList, Time.of(9, 12));
-    Assertions.assertNotNull(session.getTalkList());
-    boolean isExist = session.getTalkList().stream().anyMatch(talk -> talk.getMessage().contains("Lua for the Masses 30min"));
-    Assertions.assertTrue(isExist);
-    isExist = session.getTalkList().stream().anyMatch(talk -> talk.getTimes() == 30);
-    Assertions.assertTrue(isExist);
-  }
-
-  @Test
-  void shouldretrunnewsessionifinputerrorcachetest() {
-    File file = processFile("Test3.txt");
-    List<Talk> talkList = processFileService.processData(file);
-    List<Talk> returnTheTalkList = conferenceManagementService.processTalk(talkList, Time.of(9, 12));
-    Session session = conferenceManagementService.processSession(null, Time.of(9, 12));
-    Assertions.assertEquals(0, session.getTalkList().size());
-    session = conferenceManagementService.processSession(talkList, null);
-    Assertions.assertEquals(0, session.getTalkList().size());
-  }
-
-
-  @Test
-  void shouldRetrunTrackIfInputNormalSessionTest() {
+  void shouldDifferentTwoTalkListInTrackIfIputNormalFileTest() {
     File file = processFile("Test.txt");
-    List<Talk> talkList = processFileService.processData(file);
-    List<Talk> returnTheTalkList1 = conferenceManagementService.processTalk(talkList, Time.of(9, 12));
-    Session morningSession = conferenceManagementService.processSession(returnTheTalkList1, Time.of(9, 12));
-    List<Talk> returnTheTalkList2 = conferenceManagementService.processTalk(talkList, Time.of(13, 17));
-    Session afterSession = conferenceManagementService.processSession(returnTheTalkList2, Time.of(13, 17));
-    Track track = conferenceManagementService.processTrack(morningSession, afterSession);
-    Assertions.assertNotNull(track.getMorningSession().getTalkList());
-    Assertions.assertNotNull(track.getAfternoonSession().getTalkList());
+    Track track = conferenceManagementService.processTrack(file);
+    List<String> stringList1 = track.getMorningSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    List<String> stringList2 = track.getAfternoonSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    //StringList1中的任意一条数据都不应该在StringList2中出现
+    boolean isExist = stringList1.stream().anyMatch(s -> stringList2.stream().anyMatch(s1 -> StringUtils.contains(s, s1)));
+    Assertions.assertFalse(isExist);
   }
 
   @Test
-  void shouldRetrunNewTrackIfInputErrorSessionTest() {
-    Session morningSession = new Session(true, new ArrayList<>());
-    Session afterSession = new Session(false, new ArrayList<>());
-    Track track = conferenceManagementService.processTrack(morningSession, afterSession);
-    Assertions.assertEquals(0, track.getMorningSession().getTalkList().size());
-    Assertions.assertEquals(0, track.getAfternoonSession().getTalkList().size());
+  void shouldAnyOfTalkListMessageInTestFileIfIputNormalFileTest() throws IOException {
+    File file = processFile("Test.txt");
+    List<String> testFile = FileUtils.readLines(file, "UTF-8");
+    Track track = conferenceManagementService.processTrack(file);
+    List<String> stringList1 = track.getMorningSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    List<String> stringList2 = track.getAfternoonSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    boolean isExist = stringList1.stream().anyMatch(s -> testFile.stream().anyMatch(t -> StringUtils.contains(s, t)));
+    Assertions.assertTrue(isExist);
+    isExist = stringList2.stream().anyMatch(s -> testFile.stream().anyMatch(t -> StringUtils.contains(s, t)));
+    Assertions.assertTrue(isExist);
   }
 
   @Test
-  void shouldRetrunNewTrackIfInputNullTest() {
-    Track track = conferenceManagementService.processTrack(null, null);
-    Assertions.assertEquals(0, track.getMorningSession().getTalkList().size());
-    Assertions.assertEquals(0, track.getAfternoonSession().getTalkList().size());
+  void shouldBeDifferentMessageInTwoTrackIfIputNormalFileTest() throws IOException {
+    File file = processFile("Test.txt");
+    Track track1 = conferenceManagementService.processTrack(file);
+    Track track2 = conferenceManagementService.processTrack(file);
+    List<String> stringList1 = track1.getMorningSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    List<String> stringList2 = track2.getMorningSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    Assertions.assertNotEquals(stringList1, stringList2);
   }
 
   @Test
-  void shouldReturnTrackButTalkListInTheAfternoonIsNullIfAfternoonsessionIsnulltTest() {
+  void shouldNoWhitespaceIfIputFileHasBlankSpaceTest() throws IOException {
+    File file = processFile("Test2.txt");
+    Track track = conferenceManagementService.processTrack(file);
+    List<String> stringList1 = track.getMorningSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    List<String> stringList2 = track.getAfternoonSession().getTalkList().stream().map(talk -> talk.getMessage()).collect(Collectors.toList());
+    Assertions.assertNotEquals("", stringList1);
+    Assertions.assertNotEquals("", stringList2);
+  }
+
+  @Test
+  void shouldTimeIsObtainedNormallyIfIputFileContentHasNumbersTest() throws IOException {
     File file = processFile("Test3.txt");
-    List<Talk> talkList = processFileService.processData(file);
-    List<Talk> returnTheTalkList1 = conferenceManagementService.processTalk(talkList, Time.of(9, 12));
-    Session morningSession = conferenceManagementService.processSession(returnTheTalkList1, Time.of(9, 12));
-    List<Talk> returnTheTalkList2 = conferenceManagementService.processTalk(talkList, Time.of(13, 17));
-    Session afterSession = conferenceManagementService.processSession(returnTheTalkList2, Time.of(13, 17));
-    Track track = conferenceManagementService.processTrack(morningSession, afterSession);
-    Assertions.assertNotNull(track);
-    Assertions.assertTrue(track.getMorningSession().getTalkList().size() > 0);
-    Assertions.assertEquals(0, track.getAfternoonSession().getTalkList().size());
+    Track track = conferenceManagementService.processTrack(file);
+    List<Integer> times = track.getMorningSession().getTalkList().stream().map(talk -> talk.getTimes()).collect(Collectors.toList());
+    List<LocalTime> time = track.getMorningSession().getTalkList().stream().map(talk -> talk.getTime()).collect(Collectors.toList());
+    boolean isExist = times.stream().anyMatch(t -> StringUtils.equals(t.toString(), "60"));
+    Assertions.assertTrue(isExist);
+    isExist = times.stream().anyMatch(t -> StringUtils.equals(t.toString(), "20"));
+    Assertions.assertFalse(isExist);
+    isExist = times.stream().anyMatch(t -> StringUtils.equals(t.toString(), "6"));
+    Assertions.assertFalse(isExist);
   }
+
 
 
   private File processFile(String pathName) {
