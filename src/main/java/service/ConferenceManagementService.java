@@ -24,17 +24,11 @@ public class ConferenceManagementService {
   }
 
   public Session processSession(List<Talk> talkList, Time time) {
-    if (CollectionUtils.isEmpty(talkList) || ObjectUtils.isEmpty(time)) {
-      return new Session();
-    }
-    return new Session(time, talkList);
+    return (CollectionUtils.isEmpty(talkList) || ObjectUtils.isEmpty(time)) ? new Session() : new Session(time, talkList);
   }
 
   public Track processTrack(Session morningSession, Session afternoonSession) {
-    if (ObjectUtils.isEmpty(morningSession) || ObjectUtils.isEmpty(afternoonSession)) {
-      return new Track();
-    }
-    return new Track(morningSession, afternoonSession);
+    return (ObjectUtils.isEmpty(morningSession) || ObjectUtils.isEmpty(afternoonSession)) ? new Track() : new Track(morningSession, afternoonSession);
   }
 
   private boolean isEnoughTime(Time time, Talk talk) {

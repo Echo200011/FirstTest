@@ -12,15 +12,15 @@ public class OutputTrackListService {
   private final ProcessFileService processFileService = new ProcessFileService();
   private final ConferenceManagementService conferenceManagementService = new ConferenceManagementService();
 
-  public Track outputTrackList(File file){
+  public Track outputTrackList(File file) {
     List<Talk> talkList = processFileService.processData(file);
-    model.Time morningTime = Time.of(9,12);
-    model.Time afternoonTime = Time.of(13,17);
-    List<Talk> morningTalkList =  conferenceManagementService.processTalk(talkList,morningTime );
-    List<Talk> afternoonTalkList =  conferenceManagementService.processTalk(talkList,afternoonTime);
-    Session morningSession = conferenceManagementService.processSession(morningTalkList,morningTime);
-    Session afternoonSession = conferenceManagementService.processSession(afternoonTalkList,afternoonTime);
-    return conferenceManagementService.processTrack(morningSession,afternoonSession);
+    model.Time morningTime = Time.of(9, 12);
+    model.Time afternoonTime = Time.of(13, 17);
+    List<Talk> morningTalkList = conferenceManagementService.processTalk(talkList, morningTime);
+    List<Talk> afternoonTalkList = conferenceManagementService.processTalk(talkList, afternoonTime);
+    Session morningSession = conferenceManagementService.processSession(morningTalkList, morningTime);
+    Session afternoonSession = conferenceManagementService.processSession(afternoonTalkList, afternoonTime);
+    return conferenceManagementService.processTrack(morningSession, afternoonSession);
   }
 
 }
