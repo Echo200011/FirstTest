@@ -61,7 +61,7 @@ class ConferenceManagementServiceTest {
   }
 
   @Test
-  void shouldRetrunNewSessionIfInputErrorCacheTest() {
+  void shouldretrunnewsessionifinputerrorcachetest() {
     File file = processFile("Test3.txt");
     List<Talk> talkList = processFileService.processData(file);
     List<Talk> returnTheTalkList = conferenceManagementService.processTalk(talkList, Time.of(9, 12));

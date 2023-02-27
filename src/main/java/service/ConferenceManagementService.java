@@ -14,7 +14,7 @@ public class ConferenceManagementService {
 
   public List<Talk> processTalk(List<Talk> talkList, Time time) {
     if (CollectionUtils.isEmpty(talkList) || ObjectUtils.isEmpty(time)) {
-      return new ArrayList<>();
+      return Collections.emptyList();
     }
     Cache cache = new Cache(talkList);
     cache.getUnfinished().stream()
