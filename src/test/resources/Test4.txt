@@ -1,0 +1,3 @@
+Writing Fast Tests 6 Enterprise Rails 60min
+Overdoing it in Python 45min
+Lua for the 20min 30min @

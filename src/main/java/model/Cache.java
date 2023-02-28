@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.Data;
-
 import java.util.List;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +15,7 @@ public class Cache {
   private List<Talk> unfinished;
 
   public Cache(List<Talk> talkList) {
-    Collections.shuffle(talkList,new Random());
+    Collections.shuffle(talkList, new Random());
     this.unfinished = talkListNotInvoke(talkList);
     this.already = talkListIsInvoke(this);
   }

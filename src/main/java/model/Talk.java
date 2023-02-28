@@ -8,20 +8,31 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 public class Talk {
 
-  private String message;
-  private LocalTime time;
-  private boolean isInvoke;
-  private int times;
+  private String title;
 
-  public Talk(String message, int times) {
-    this.message = message;
-    this.times = times;
-    this.time = LocalTime.MIDNIGHT.plus((times % 5 == 0) ? Duration.ofMinutes(times) : Duration.ofMinutes((times - times % 5 + 5)));
+  private String talkDetails;
+  private final LocalTime executionTime;
+  private boolean isInvoke;
+  private final int actualTime;
+
+
+  public Talk(String title, int actualTime) {
+    this.title = title;
+    this.actualTime = actualTime;
+    this.executionTime = LocalTime.MIDNIGHT.plus(
+        (actualTime % 5 == 0) ? Duration.ofMinutes(actualTime) : Duration.ofMinutes((actualTime - actualTime % 5 + 5)));
   }
 
-  public static Talk initTalk(String message) {
-    String minutes = StringUtils.substringAfterLast(message, " ");
+
+  public static Talk initTalk(String conferenceInformation) {
+    String title = StringUtils.substringBeforeLast(conferenceInformation, "");
+    String minutes = StringUtils.substringAfterLast(conferenceInformation, " ");
     minutes = StringUtils.substringBefore(minutes, "m");
-    return (minutes.equals("lightning")) ? new Talk(message, 5) : new Talk(message, Integer.parseInt(minutes));
+    try {
+      int actualTime = minutes.equals("lightning") ? 5 : Integer.parseInt(minutes);
+      return new Talk(title, actualTime);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Talk初始化错误：时间转换错误", e);
+    }
   }
 }
